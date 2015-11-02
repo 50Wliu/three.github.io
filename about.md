@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+Proudly [hosted on Gituhub](https://github.com/threedot14/threedot14.github.io). Based on the [Jekyll Now](https://github.com/barryclark/jekyll-now) template.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[eric@threedot14.com](mailto:eric@threedot14.com)
