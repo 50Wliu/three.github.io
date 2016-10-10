@@ -244,7 +244,7 @@ Run `ip addr` repeatedly until your assigned an IP.
 You should have three network connections: a loopback (handling localhost),
 and two ethernet connections. To test which is which, write down the IPv4
 addresses of the two non-loopback connections and try to ping each from
-windows.
+Windows.
 
     > REM Run this on Windows cmd!!
     > ping 10.0.2.15
@@ -339,7 +339,7 @@ Restart the OpenSSH service.
     $ sudo systemctl restart sshd.socket
 
 On PuTTY, when connecting to the VM, select the private key file you saved
-earlier under Connection->SSH->Auth. You can use Saved Sessions to avoid
+earlier under Connection->SSH->Auth. You can use Saved Sessions to
 connect automatically to the right server.
 
 # Performance
@@ -348,9 +348,9 @@ connect automatically to the right server.
 
 I wrote this article in a PuTTY terminal attached to a local VM, with another
 VM open to test and take screenshots, on a Microsoft Surface with an i5-6300U
-and experienced no performance issues. In fact, Spotify and Chrome individually
+and experienced few performance issues. In fact, Spotify and Chrome individually
 use more CPU and RAM than Virtualbox. Doing more intensive tasks like compiling
-gives comparable results to doing them on Windows.
+gives comparable, though longer, results to doing them on Windows.
 
 A fresh install of Arch takes about 1.5GB, but will grow as you add tools.
 
