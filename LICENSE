@@ -1,3 +1,15 @@
+The contents of this blog are licensed under a Creative Commons Attribution 4.0
+International license. More information about this license is available at
+https://creativecommons.org/licenses/by/4.0/. This includes everything in the
+/_posts/ directory, but not the HTML, CSS or other code used to build and
+render the blog.
+
+------
+
+The Jekyll Now theme is licensed under the below MIT license. This includes the
+CSS, HTML and other code including any modifications made. This does not include
+the contents of the /_posts/ directory.
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Barry Clark
