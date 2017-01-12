@@ -58,7 +58,7 @@ Once arch is booted select the installation option.
 
 Arch Linux will be the OS of choice given it's lightweight and customizable. We
 don't want to be weighed down by a graphical interface, for example. If your
-having trouble with the installation, consult the
+having trouble with the installation, consult the official
 [installation guide](https://wiki.archlinux.org/index.php/installation_guide).
 
 Arch Linux gets a bad rap for not being beginner-friendly, but once installed
@@ -143,9 +143,10 @@ The arch `pacstrap` command has the job of installing arch to the drive. In
 this case, I install `base-devel` because I plan to use this for development.
 This includes tools like `make`, `sudo` and `gcc`. I will assume you have these
 installed for the rest of the tutorial, but they are also trivial to install
-only when needed. The `base` package is required.
+only when needed. The `base` package is required. I also install `vim` at this
+stage, however `nano` is included in `base`.
 
-    # pacstrap /mnt base base-devel
+    # pacstrap /mnt base base-devel vim
 
 Set your fstab file to automatically mount the drive.
 
@@ -155,15 +156,15 @@ Now we're ready to start doing work on our drive. Chroot into the system.
 
     # arch-chroot /mnt
 
-Install any packages you want to use that aren't included in the base install.
-
-    # pacman -S vim
-
 Install the grub bootloader.
 
     # pacman -S grub
     # grub-install /dev/sda
     # grub-mkconfig -o /boot/grub/grub.cfg
+
+By default grub will pause for 5 seconds before booting. This can be changed by
+altering the `GRUB_TIMEOUT` variable in `/etc/default/grub` then running
+`update-grub`.
 
 ### Configure Arch
 
@@ -184,7 +185,7 @@ and the root user.
 Obviously if you live in a different time zone or need a different locale find
 the one you need and use that instead.
 
-Change the root pasword.
+Change the root password.
 
     # passwd
 
@@ -241,29 +242,25 @@ Run `ip addr` repeatedly until your assigned an IP.
         inet6 fe80::aca5:92ee:42f8:95cf/64 scope link 
            valid_lft forever preferred_lft forever
 
-You should have three network connections: a loopback (handling localhost),
-and two ethernet connections. To test which is which, write down the IPv4
-addresses of the two non-loopback connections and try to ping each from
-Windows.
+In Virtualbox, look under File->Preferences->Nat Network to find the subnet of
+the selected NAT and match it to the correct IP. The *other* network (ignore
+the loopback adaptor) is the host-only adaptor. In this case, `enp0s3`. If
+you are not assigned an IP for the NAT make sure "Supports DHCP" is checked.
 
-    > REM Run this on Windows cmd!!
-    > ping 10.0.2.15
-    Pinging 10.0.2.15 with 32 bytes of data:
-    Request timed out.
-    Request timed out.
-    > ping 192.168.56.102
-    Pinging 192.168.56.102
-    Reply from 192.168.56.102: bytes=32 time<1ms TTL=64
-    Reply from 192.168.56.102: bytes=32 time<1ms TTL=64
+To setup PuTTY correctly, it's important the host-only adaptor always uses the
+same IPv4 address. This can be configured in dhcpcd.
 
-Chances are the correct IP will be the one starting with 192.168.56, but I
-don't know enough about how VirtualBox chooses IP addresses to say if that's
-true consistently.
+    # echo "interface enp0s3" >> /etc/dhcpcd.conf
+    # echo "static ip_address=192.168.56.101" >> /etc/dhcpcd.conf
+
+After, you must restart dhcpcd.
+
+    # systemctl restart dhcpcd
 
 ### Install virtualbox guest additions
 
 This isn't strictly necessary but will give better performance and make
-shared folders a lot easier.
+shared folders easier.
 
     # pacman -S virtualbox-guest-utils-nox
 
@@ -273,6 +270,10 @@ option make sure you also install the proper kernel headers.
 Load the vbox modules.
 
     # modprobe -a vboxguest vboxsf vboxvideo
+
+After a reboot you should be able to use paravirtual features such as the
+paravirtual network driver, which may improve performance. You may need to
+reconfigure the network.
 
 ### Create a new user
 
@@ -306,7 +307,7 @@ login with IP from earlier, check that sudo works.
 
     $ sudo echo success
 
-Entering your username and password every time is inconvienent, so we will
+Entering your username and password every time is inconvenient, so we will
 setup public key login.
 
 ![PuTTY Key Generation](/images/Virtual-Linux-Windows/pgen.png)
@@ -316,7 +317,7 @@ Save this key somewhere on your computer, such as in the directory your VM
 is stored in.
 
 In PuTTY, copy the text area with the public key starting with ssh-rsa. Open
-`~/.ssh/authorized_keys` in nano and paste (middle click) the key in. You may
+`~/.ssh/authorized_keys` in nano and paste (right click) the key in. You may
 have to create this file. Remove any newlines within your key.
 
     $ mkdir ~/.ssh
@@ -344,7 +345,7 @@ connect automatically to the right server.
 
 # Performance
 
-![Performance on Microsoft Surface](/images/Virtual-Linux-Windows/perf.png)
+![Idle performance on Microsoft Surface](/images/Virtual-Linux-Windows/perf.png)
 
 I wrote this article in a PuTTY terminal attached to a local VM, with another
 VM open to test and take screenshots, on a Microsoft Surface with an i5-6300U
@@ -354,7 +355,38 @@ gives comparable, though longer, results to doing them on Windows.
 
 A fresh install of Arch takes about 1.5GB, but will grow as you add tools.
 
-# Going further
+# tmux, ZSH and themes
+
+As functional as PuTTY+Linux is, the current setup is a bit drab. This short
+section will outline how to enable tmux with full mouse support, along with
+zsh and the [agnoster](https://github.com/agnoster/agnoster-zsh-theme) theme. I
+purposely chose this theme because it looks cool and requires a special font
+that isn't obvious how to setup.
+
+Both tmux and zsh can be installed using pacman.
+
+    # pacman -S tmux zsh
+
+Enabling tmux mouse support requires one line in `~/.tmux.conf`.
+
+    $ echo "set -g mouse" > ~/.tmux.conf
+
+Test it out by running `tmux`, opening 2 panes using `ctrl-b %` and dragging
+the dividing line up and down using your mouse. Additionally you can drag
+to select text in tmux and copy/paste using tmux's built-in keyboard (to select
+text, copy or paste to/from the Windows keyboard use shift-right/left-click).
+
+The agnoster theme requires oh-my-zsh to be installed.
+
+    $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+Following the setup, set your `ZSH_THEME` to `agnoster` in `~/.zshrc`. Before
+the theme is fully functional, PuTTY must first be setup with the correct fonts.
+Download `DejaVu Sans Mono for Powerline.ttf` from the Powerline [font
+repository](https://github.com/powerline/fonts). Open and click "Install"
+at the top of the Windows Font Viewer. Select this font in PuTTY under
+Window->Appearance->Font Settings. Update your settings under Saved
+Sessions.
 
 My personal setup includes zsh and tmux with full mouse support and shared
 folders to allow easy data transfer. I wrote this in neovim with jekyll
