@@ -357,6 +357,8 @@ A fresh install of Arch takes about 1.5GB, but will grow as you add tools.
 
 # tmux, ZSH and themes
 
+<video src="/images/Virtual-Linux-Windows/demo.webm" loop muted autoplay></video>
+
 As functional as PuTTY+Linux is, the current setup is a bit drab. This short
 section will outline how to enable tmux with full mouse support, along with
 zsh and the [agnoster](https://github.com/agnoster/agnoster-zsh-theme) theme. I
