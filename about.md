@@ -10,4 +10,4 @@ The content of this blog is licensed under a [Creative Commons Attribution 4.0 I
 
 ### Contact me
 
-[eric@threedot14.com](mailto:eric@threedot14.com)
+The best way to reach me is emailing eric AT threedot14.com.
