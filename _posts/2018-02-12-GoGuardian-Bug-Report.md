@@ -5,10 +5,10 @@ title: Reporting Misconfigured IAM permissions in GoGuardian
 published: false
 ---
 
-*This post is coauthored by Winston Liu and Eric Roberts. We jointly discovered
-and reported a security issue in GoGuardian's Chromebook management software, 
-and were rewarded by the company for our work. This post chronicles what
-happened.*
+*This post is co-authored by Winston Liu and Eric Roberts, with the first-person
+point of view being Eric's. We jointly discovered and reported two security issues
+in GoGuardian's Chromebook management software, and were rewarded by the company
+for our work. This post chronicles what happened.*
 
 First, a confession: this is about a bug found and submitted almost two years
 ago. We always had it in the back of my mind to write this post but laziness and
@@ -108,16 +108,16 @@ for s in response0["StreamDescription"]["Shards"]:
     print( data )
 ```
 
-The output was JSON-formatted data clearly sent from student chromebooks across
-the country announcing its user had accessed a site with a bad word. At this
+Among the output was JSON-formatted data clearly sent from student Chromebooks across
+the country announcing its user had accessed a site with a blacklisted word. At this
 point we decided to look for someone to contact at GoGuardian, although in the
-day it took to send the email we managed to find something else more
+time it took to send the email we managed to find something else more
 interesting.
 
 Although knowing which students are visiting naughty pages is somewhat
 interesting, we were convinced GoGuardian was collecting more detailed
 information from students. We had already found debugging the extension on the
-Chromebooks was a lost cause so Eric decided to try his luck debugging the software
+Chromebooks was a lost cause so I decided to try my luck debugging the software
 on a personal computer. However, the management extensions and restrictions,
 discussed earlier, are loaded into Chrome after associating a user profile with
 the school Google account. This meant that all the policies were also active on
@@ -278,6 +278,12 @@ to fix than they did.
 > Cheers,
 >
 > Advait
+
+# Summary
+
+While we were seniors at Morristown High School, we discovered and reported
+two security vulnerabilities in the GoGuardian management software,
+both of which were exposing personally-identifiable information to the public.
 
 # Reward
 
